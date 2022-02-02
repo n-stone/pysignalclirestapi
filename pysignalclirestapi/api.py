@@ -50,6 +50,13 @@ class SignalCliRestApi(object):
             self._auth = None
 
     def api_info(self):
+        """
+        Get API version and build numbers
+        Args:
+            -
+        Returns:
+            tuple(api_versions, build_nr)
+        """
         try:
             resp = requests.get(
                 self._base_url + "/v1/about", auth=self._auth, verify=self._verify_ssl)
@@ -70,6 +77,13 @@ class SignalCliRestApi(object):
                 "Couldn't determine REST API version"), exc)
 
     def mode(self):
+        """
+        Get server mode
+        Args:
+            -
+        Returns:
+            mode
+        """
         resp = requests.get(self._base_url + "/v1/about",
                             auth=self._auth, verify=self._verify_ssl)
         data = json.loads(resp.content)
@@ -82,6 +96,14 @@ class SignalCliRestApi(object):
         return mode
 
     def create_group(self, name, members):
+        """
+        Create a new Groupe and add members
+        Args:
+            name: The name of the new group
+            members: Members of the new group
+        Returns:
+            group id
+        """
         try:
 
             url = self._base_url + "/v1/groups/" + self._number
@@ -104,6 +126,13 @@ class SignalCliRestApi(object):
                 "Couldn't create Signal Messenger group: "), exc)
 
     def list_groups(self):
+        """
+        List a all Groups
+        Args:
+            -
+        Returns:
+            group ids and names
+        """
         try:
             url = self._base_url + "/v1/groups/" + self._number
             resp = requests.get(url, auth=self._auth, verify=self._verify_ssl)
@@ -121,6 +150,13 @@ class SignalCliRestApi(object):
                 "Couldn't list Signal Messenger groups: "), exc)
 
     def receive(self):
+        """
+        Recive Messages
+        Args:
+            -
+        Returns:
+            messages
+        """
         try:
             url = self._base_url + "/v1/receive/" + self._number
             resp = requests.get(url, auth=self._auth, verify=self._verify_ssl)
@@ -138,9 +174,13 @@ class SignalCliRestApi(object):
                 "Couldn't receive Signal Messenger data: "), exc)
 
     def update_profile(self, name, filename=None):
-        """Update Profile.
-
-        Set the name and optionally an avatar.
+        """
+        Set the name and optionally an picture
+        Args:
+            name: New profile name
+            filename: Path to the new profile picture
+        Returns:
+            -
         """
 
         try:
@@ -167,9 +207,15 @@ class SignalCliRestApi(object):
             raise_from(SignalCliRestApiError("Couldn't update profile: "), exc)
 
     def send_message(self, message, recipients, filenames=None, attachments_as_bytes=None):
-        """Send a message to one (or more) recipients.
-
-        Additionally files can be attached.
+        """
+        Send a message to one or more recipients, inlcuding file attachments
+        Args:
+            message: 
+            recipients:
+            filenames: 
+            attachments_as_bytes:
+        Returns:
+            -
         """
 
         api_versions, build_nr = self.api_info()
@@ -224,7 +270,13 @@ class SignalCliRestApi(object):
                 "Couldn't send signal message"), exc)
 
     def list_attachments(self):
-        """List all downloaded attachments."""
+        """
+        List all downloaded attachments.
+        Args:
+            -
+        Returns:
+            dict
+        """
 
         try:
             url = self._base_url + "/v1/attachments"
@@ -242,7 +294,13 @@ class SignalCliRestApi(object):
             raise_from(SignalCliRestApiError("Couldn't list attachments: "), exc)
 
     def get_attachment(self, attachment_id):
-        """Serve the attachment with the given id."""
+        """
+        Serve the attachment with the given id.
+        Args:
+            attachment_id: 
+        Returns:
+            dict
+        """
 
         try:
             url = self._base_url + "/v1/attachments/" + attachment_id
@@ -261,7 +319,13 @@ class SignalCliRestApi(object):
             raise_from(SignalCliRestApiError("Couldn't get attachment: "), exc)
 
     def delete_attachment(self, attachment_id):
-        """Remove the attachment with the given id from filesystem."""
+        """
+        Remove the attachment with the given id from filesystem.
+        Args:
+            attachment_id: 
+        Returns:
+            -
+        """
 
         try:
             url = self._base_url + "/v1/attachments/" + attachment_id
